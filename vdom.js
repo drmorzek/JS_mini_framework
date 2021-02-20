@@ -37,7 +37,7 @@ function unmount(vnode){
 // обновление ноды
 function patch(node1, node2){
 
-    
+
     if (node1.tag === node2.tag) {
         mount(node2, node1.$el.parentNode)
         unmount(node1)
@@ -82,4 +82,56 @@ function patch(node1, node2){
         }
     }
 
+}
+
+
+//функционал реактивности
+let activeEffect;
+
+function watchEffect(fn){
+    activeEffect = fn
+    fn()
+    activeEffect = null
+}
+
+class Dependency{
+
+    constructor(){
+        this.subscribers = new Set()
+    }
+
+    depend(){
+        if(activeEffect) {
+            this.subscribers.add(activeEffect)
+        }
+    }
+
+    notify(){
+        this.subscribers.forEach(sub => sub())
+    }
+}
+
+function reactivity(obj){
+    Object.keys(obj).forEach(key => {
+
+        const dep = new Dependency()
+        let value = obj[key]
+
+
+        Object.defineProperty(obj, key, {
+            get(){
+                dep.depend()
+                return value
+            },
+            set(newValue){
+                if(newValue != value){
+                    value = newValue
+                    dep.notify()
+                }
+            }
+        })
+
+    })
+
+    return obj
 }

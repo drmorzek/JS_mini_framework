@@ -8,30 +8,33 @@
     <script src="vdom.js"></script>
 </head>
 <body>
-    <button onclick="Replace()">Replace</button>
-    <button onclick="Replace2()">Replace2</button>
 
     <div id="app"></div>
 
     <script>
-        const node = h('div', {class: 'container'}, [
-            h('h1', {title: 'Title'}, 'blablabla'),
-            h('p', {class: 'description'}, 'blablabla2')
-        ]);
 
-        const newNode = h('div', {class: 'container'}, [
+        const state = reactivity({
+            inputValue: ''
+        });
+
+        function render(text){
+            return h('div', {class: 'container'}, [
             h('h2', {title: 'Title'}, 'blablabla - updated'),
-            h('p', {class: 'description'}, 'blablabla2 - updated')
+            h('p', {}, text),
+            h('input', {oninput: 'state.inputValue = this.value'}, [])
         ]);
-
-        mount(node, document.getElementById('app'));
-
-        function Replace() {
-            patch(node, newNode);
         }
-        function Replace2() {
-            patch(newNode, node);
-        }
+
+        let currentNode;
+        watchEffect(() => {
+            
+            if(!currentNode){
+                currentNode = render(state.inputValue)
+
+                mount(currentNode, document.getElementById('app'));
+            }
+
+        });        
 
     </script>
 </body>
