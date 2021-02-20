@@ -32,6 +32,10 @@
                 currentNode = render(state.inputValue)
 
                 mount(currentNode, document.getElementById('app'));
+            } else {
+                let newNode = render(state.inputValue)
+                patch(currentNode, newNode)
+                currentNode = newNode
             }
 
         });        
