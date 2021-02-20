@@ -5,8 +5,34 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="vdom.js"></script>
 </head>
 <body>
-    
+    <button onclick="Replace()">Replace</button>
+    <button onclick="Replace2()">Replace2</button>
+
+    <div id="app"></div>
+
+    <script>
+        const node = h('div', {class: 'container'}, [
+            h('h1', {title: 'Title'}, 'blablabla'),
+            h('p', {class: 'description'}, 'blablabla2')
+        ]);
+
+        const newNode = h('div', {class: 'container'}, [
+            h('h2', {title: 'Title'}, 'blablabla - updated'),
+            h('p', {class: 'description'}, 'blablabla2 - updated')
+        ]);
+
+        mount(node, document.getElementById('app'));
+
+        function Replace() {
+            patch(node, newNode);
+        }
+        function Replace2() {
+            patch(newNode, node);
+        }
+
+    </script>
 </body>
 </html>
