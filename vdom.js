@@ -38,17 +38,19 @@ function unmount(vnode){
 function patch(node1, node2){
 
 
-    if (node1.tag === node2.tag) {
+    if (node1.tag !== node2.tag) {
         mount(node2, node1.$el.parentNode)
         unmount(node1)
     } else {
         node2.$el = node1.$el
-
-
+        
         if (typeof node2.children === "string") {
             node2.$el.textContent = node2.children
+
+            
         } else {
-            while (node2.$el.attributes.lenght >0){
+            while(node2.$el.attributes.length >0){
+                console.log(node2.$el.attributes.length)
                 node2.$el.removeAttribute(node2.$el.attributes[0].name)
 
                 for (const key in node2.props) {
@@ -61,7 +63,7 @@ function patch(node1, node2){
                         mount(child, node2.$el)
                     });
                 } else {
-                    const commonLength = Mayh.min(node2.children.length, node1.children.length)
+                    const commonLength = Math.min(node2.children.length, node1.children.length)
 
                     for (let i = 0; i < commonLength; i++) {
                         patch(node1.children[i], node2.children[i])
